@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Book;
+
 class BookController extends Controller
 {
     /**
@@ -21,7 +23,6 @@ class BookController extends Controller
        $bookGot = Book::get()->toJson(JSON_PRETTY_PRINT);
         return response($bookGot, 200);
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -30,7 +31,13 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $book = new Book;
+        $book->title = $request->title;
+        $book->description = $request->description;
+        $book-> save();
+        return response()->json([
+            "message" => "book created succesfully c:"
+        ], 200);
     }
 
     /**
