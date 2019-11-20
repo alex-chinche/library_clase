@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use \Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use App\User;
+use App\Helpers\Token;
 
 class UserController extends Controller
 {
@@ -40,9 +42,15 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = $request->password;
         $user->save();
-        return response()->json([
-            "message" => "user created succesfully c:"
-        ], 200);
+
+        $Token1 = new Token();
+        $Token1->set_token($request);
+    }
+
+    public function login(Request $request)
+    {
+       //CODIGO DEL LOGIN
+       
     }
 
     /**

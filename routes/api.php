@@ -22,5 +22,7 @@ Route::apiResource('users', 'UserController');
 
 Route::get('showBooks', 'BookController@showBooks');
 
+Route::post('login', 'UserController@login');
+
 
 

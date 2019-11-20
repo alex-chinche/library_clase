@@ -36,7 +36,7 @@ class BookController extends Controller
         $book->description = $request->description;
         $book-> save();
         return response()->json([
-            "message" => "book created succesfully c:"
+            "message" => "book created succesfully"
         ], 200);
     }
 
