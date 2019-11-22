@@ -13,10 +13,7 @@ class Token {
         $data_token = [
         "encrypted_email" => $request->email,
         ];
-
-        $token = JWT::encode($data_token, $key);
-        return response()->json([
-        'message' => $token 
-        ], 200); 
+        $data = JWT::encode($data_token, $key);
+        return $data;
     }
 }

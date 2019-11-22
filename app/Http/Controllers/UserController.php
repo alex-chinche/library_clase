@@ -6,6 +6,7 @@ use \Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use App\User;
 use App\Helpers\Token;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -16,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        
+
     }
 
     /**
@@ -49,8 +50,27 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-       //CODIGO DEL LOGIN
-       
+        $data = ['email' => $request->email];
+        $user = User::where('email', $request->email)->first();
+
+        if($user->password == $request->password) {
+            $token = new Token($data);
+            $encoded_token = $token->set_token($request);
+            return response()->json([
+                'token' => $encoded_token
+            ], 200);
+        }
+        else {
+            return response()->json([
+                'message' => "incorrect password"
+            ], 401);
+        }
+    }
+
+    public function tests()
+    {
+        $userGot = User::get();
+        return response(count($userGot), 200);
     }
 
     /**

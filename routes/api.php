@@ -24,5 +24,5 @@ Route::get('showBooks', 'BookController@showBooks');
 
 Route::post('login', 'UserController@login');
 
-
+Route::get('tests', 'UserController@tests');
 
