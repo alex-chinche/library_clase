@@ -52,19 +52,33 @@ class UserController extends Controller
     {
         $data = ['email' => $request->email];
         $user = User::where('email', $request->email)->first();
-
-        if($user->password == $request->password) {
-            $token = new Token($data);
-            $encoded_token = $token->set_token($request);
-            return response()->json([
-                'token' => $encoded_token
-            ], 200);
+        if($user) {
+            if($user->password == $request->password) {
+                $token = new Token($data);
+                $encoded_token = $token->set_token($request);
+                return response()->json([
+                    'token' => $encoded_token
+                ], 200);
+            }
+            else {
+                return response()->json([
+                    'message' => "incorrect password"
+                ], 401);
+            }
         }
         else {
             return response()->json([
-                'message' => "incorrect password"
+                'message' => "incorrect email"
             ], 401);
         }
+    }
+
+    public function lend(Request $request) {
+        $token_decoded = $token->decode_token($token);
+        $user = User::where(['email' => $token_decoded->email]);
+        $book = Book::find($request->id);
+
+        $user->books()->attach($book->id);
     }
 
     public function tests()

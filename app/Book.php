@@ -10,4 +10,8 @@ class Book extends Model
         'title', 'description',
     ];
     protected $table = 'books';
+
+    function users() {
+        return $this->belongsToMany('App\User', 'users_borrowing_books');
+    }
 }
