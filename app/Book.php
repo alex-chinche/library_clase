@@ -11,7 +11,8 @@ class Book extends Model
     ];
     protected $table = 'books';
 
-    function users() {
+    function users()
+    {
         return $this->belongsToMany('App\User', 'users_borrowing_books');
     }
 }

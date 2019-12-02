@@ -9,7 +9,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -22,7 +21,8 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
-    function books() {
-        return $this->belongsToMany('App\Book', 'users_borrowing_books');
+    function books()
+    {
+        return $this->belongsToMany('App\Book', 'users_borrowing_books', 'book_id')->withTimestamps();
     }
 }

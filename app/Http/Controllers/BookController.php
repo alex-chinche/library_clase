@@ -14,13 +14,11 @@ class BookController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        
-    }
+    { }
 
     public function showBooks(Request $request)
     {
-       $bookGot = Book::get()->toJson(JSON_PRETTY_PRINT);
+        $bookGot = Book::get()->toJson(JSON_PRETTY_PRINT);
         return response($bookGot, 200);
     }
     /**
@@ -34,7 +32,7 @@ class BookController extends Controller
         $book = new Book;
         $book->title = $request->title;
         $book->description = $request->description;
-        $book-> save();
+        $book->save();
         return response()->json([
             "message" => "book created succesfully"
         ], 200);

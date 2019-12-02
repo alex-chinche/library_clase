@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use \Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use App\User;
+use App\Book;
 use App\Helpers\Token;
 use Illuminate\Support\Facades\DB;
 
@@ -16,9 +17,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-
-    }
+    { }
 
     /**
      * Show the form for creating a new resource.
@@ -44,47 +43,43 @@ class UserController extends Controller
         $user->password = $request->password;
         $user->save();
 
-        $Token1 = new Token();
-        $Token1->set_token($request);
+        $token1 = new Token();
+        $token1->set_token($request);
     }
 
     public function login(Request $request)
     {
         $data = ['email' => $request->email];
         $user = User::where('email', $request->email)->first();
-        if($user) {
-            if($user->password == $request->password) {
+        if ($user) {
+            if ($user->password == $request->password) {
                 $token = new Token($data);
                 $encoded_token = $token->set_token($request);
                 return response()->json([
                     'token' => $encoded_token
                 ], 200);
-            }
-            else {
+            } else {
                 return response()->json([
                     'message' => "incorrect password"
                 ], 401);
             }
-        }
-        else {
+        } else {
             return response()->json([
                 'message' => "incorrect email"
             ], 401);
         }
     }
 
-    public function lend(Request $request) {
-        $token_decoded = $token->decode_token($token);
-        $user = User::where(['email' => $token_decoded->email]);
-        $book = Book::find($request->id);
-
-        $user->books()->attach($book->id);
-    }
-
-    public function tests()
+    public function lend(Request $request)
     {
-        $userGot = User::get();
-        return response(count($userGot), 200);
+        $token1 = new Token();
+        $token_decoded = $token1->decode_token($request->token);
+        $mail = $token_decoded->encrypted_email;
+        $user = User::where('email', $mail)->first();
+        $user->books()->attach($request->book_id);
+        return response()->json([
+            "message" => "book lend correctly"
+        ], 200);
     }
 
     /**
