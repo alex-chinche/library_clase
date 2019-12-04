@@ -20,7 +20,7 @@ Route::apiResource('books', 'BookController')->middleware('check_token');
 
 Route::apiResource('users', 'UserController');
 
-Route::post('showBooks', 'BookController@showBooks')->middleware('check_token');
+Route::get('showBooks', 'BookController@showBooks')->middleware('check_token');
 
 Route::post('login', 'UserController@login');
 

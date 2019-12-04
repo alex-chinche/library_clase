@@ -17,14 +17,20 @@ class CheckToken
      */
     public function handle($request, Closure $next)
     {
-        $saved_token = new Token();
-        $token = $request->token;
-        $verified_email = $saved_token->decode_token($token);
-        $received_user = User::where('email', $verified_email)->first();
-        $received_email = $received_user->email;
+        try {
+            $saved_token = new Token();
+            $token = $request->header('token');
+            $verified_email = $saved_token->decode_token($token);
+            $received_user = User::where('email', $verified_email)->first();
+            $received_email = $received_user->email;
 
-        if($received_email == $verified_email) {
-            return $next($request);
+            if($received_email == $verified_email) {
+                return $next($request);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => "access unavailable"
+            ], 401);
         }
     }
 }
