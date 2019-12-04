@@ -42,9 +42,12 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = $request->password;
         $user->save();
-
         $token1 = new Token();
-        $token1->set_token($request);
+        $token2 = $token1->set_token($user->email);
+
+        return response()->json([
+            'token' => $token2
+        ], 200);
     }
 
     public function login(Request $request)
@@ -54,7 +57,7 @@ class UserController extends Controller
         if ($user) {
             if ($user->password == $request->password) {
                 $token = new Token($data);
-                $encoded_token = $token->set_token($request);
+                $encoded_token = $token->set_token($user->email);
                 return response()->json([
                     'token' => $encoded_token
                 ], 200);
@@ -76,7 +79,14 @@ class UserController extends Controller
         $token_decoded = $token1->decode_token($request->token);
         $mail = $token_decoded->encrypted_email;
         $user = User::where('email', $mail)->first();
+
+        //var_dump("hola");
+        //exit;
+
         $user->books()->attach($request->book_id);
+
+
+
         return response()->json([
             "message" => "book lend correctly"
         ], 200);

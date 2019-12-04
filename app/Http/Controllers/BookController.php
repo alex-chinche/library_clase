@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Book;
+use App\Helpers\Token;
 
 class BookController extends Controller
 {
@@ -16,9 +17,9 @@ class BookController extends Controller
     public function index()
     { }
 
-    public function showBooks(Request $request)
+    public function showBooks()
     {
-        $bookGot = Book::get()->toJson(JSON_PRETTY_PRINT);
+        $bookGot = Book::all()->toJson(JSON_PRETTY_PRINT);
         return response($bookGot, 200);
     }
     /**
