@@ -8,60 +8,58 @@ use App\Helpers\Token;
 
 class UserController extends Controller
 {
-    public function store(Request $request)
+    public function createUser(Request $request)
     {
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = $request->password;
-        $user->save();
-        $token1 = new Token();
-        $token2 = $token1->set_token($user->email);
+        try {
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = $request->password;
+            $user->save();
+            $token1 = new Token();
+            $token2 = $token1->set_token($user->email);
 
-        return response()->json([
-            'token' => $token2
-        ], 200);
+            return response()->json([
+                'token' => $token2
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => "Not possible to create user"
+            ], 401);
+        }
     }
 
-    public function login(Request $request)
+    public function loginUser(Request $request)
     {
         $data = ['email' => $request->email];
         $user = User::where('email', $request->email)->first();
-        
+
         try {
-                if ($user->password == $request->password) {
-                    $token = new Token($data);
-                    $encoded_token = $token->set_token($user->email);
-                    return response()->json([
-                        'token' => $encoded_token
-                    ], 200);
-                } else {
-                    return response()->json([
-                        'message' => "incorrect password"
-                    ], 401);
-                }
+            if ($user->password == $request->password) {
+                $token = new Token($data);
+                $encoded_token = $token->set_token($user->email);
+                return response()->json([
+                    'token' => $encoded_token
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => "Incorrect password"
+                ], 401);
+            }
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => "incorrect email"
+                'message' => "Incorrect email"
             ], 401);
-        } 
+        }
     }
 
-    public function lend(Request $request)
+    public function getUserFromToken(Request $request)
     {
-            try {
-                $token1 = new Token();
-                $token_decoded = $token1->decode_token($request->header('Authorization'));
-                $mail = $token_decoded;
-                $user = User::where('email', $mail)->first();
-                $user->books()->attach($request->book_id);
-                return response()->json([
-                    "message" => "book lend correctly"
-        ], 200);
-                } catch (\Throwable $th) {
-                return response()->json([
-                    'message' => "book not found"
-                ], 401);
-            } 
+        $tokenSummon = new Token;
+        $codedToken = $request->header("token");
+        $emailFromToken = $tokenSummon->decode_token($codedToken);
+        $user = User::where("email", $emailFromToken)->first();
+
+        return $user;
     }
 }

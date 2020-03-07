@@ -11,9 +11,4 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password',
     ];
-
-    function books()
-    {
-        return $this->belongsToMany('App\Book', 'users_borrowing_books')->withTimestamps();
-    }
 }

@@ -14,14 +14,20 @@ class BookController extends Controller
         return response($bookGot, 200);
     }
 
-    public function store(Request $request)
+    public function createBook(Request $request)
     {
-        $book = new Book;
-        $book->title = $request->title;
-        $book->description = $request->description;
-        $book->save();
-        return response()->json([
-            "message" => "book created succesfully"
-        ], 200);
+        try {
+            $book = new Book;
+            $book->title = $request->title;
+            $book->description = $request->description;
+            $book->save();
+            return response()->json([
+                "message" => "Book Created Succesfully"
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "message" => "Not Possible To Create Book"
+            ], 200);
+        }
     }
 }
